@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">核心修補</string>
+    <string name="bypass_downgrade">允許降版安裝應用程式</string>
+    <string name="bypass_downgrade_summary">允許應用程式在安裝新版本的情況下直接覆蓋安裝舊版本</string>
+    <string name="bypass_verification">停用套裝安裝程式簽名驗證</string>
+    <string name="bypass_verification_summary">停用安裝應用程式時的簽名驗證，可以安裝被修改的應用程式</string>
+    <string name="bypass_digest">停用 APK 簽名驗證</string>
+    <string name="bypass_digest_summary">允許直接覆蓋安裝同套件名稱但不同簽名的應用程式</string>
+    <string name="bypass_exact_signature_match">Bypass exact signature match</string>
+    <string name="bypass_exact_signature_match_summary">Allow split APKs to use different signatures.</string>
+    <string name="use_previous_signatures">安裝時總是使用已安裝應用程式的簽名</string>
+    <string name="use_previous_signatures_summary">不是一般的<b>危險</b>，只在絕對需要時啟用</string>
+    <string name="use_previous_signatures_warning">！！所有安裝檔可以覆蓋已安裝的應用程式！！\n安裝未知的安裝檔時請務必小心</string>
+    <string name="bypass_shared_user">Bypass shared user verification</string>
+    <string name="bypass_shared_user_summary">Allow packages with a different shared-user signature.</string>
+    <string name="disable_verification_agent">Disable Package Verification Agent</string>
+    <string name="disable_verification_agent_summary">For example, Google Play Protect.</string>
+    <string name="bypass_block">繞過黑名單</string>
+    <string name="bypass_block_summary">繞過某些裝置如 Nothing Phone 上的黑名單</string>
+    <string name="module_description">Android 9-16 核心修補</string>
+</resources>

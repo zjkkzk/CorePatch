@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Core Patch</string>
+    <string name="bypass_downgrade">Разрешить понижать версию.</string>
+    <string name="bypass_downgrade_summary">Разрешить переустановку приложений на прошлые версии.</string>
+    <string name="bypass_verification">Отключить проверку дайджеста</string>
+    <string name="bypass_verification_summary">Позволяет устанавливать приложения после изменения файла в apk (игнорировать недопустимую ошибку дайджеста).</string>
+    <string name="bypass_digest">Отключить сравнение подписей</string>
+    <string name="bypass_digest_summary">Разрешить переустановку приложения с другими подписями.</string>
+    <string name="bypass_exact_signature_match">Bypass exact signature match</string>
+    <string name="bypass_exact_signature_match_summary">Allow split APKs to use different signatures.</string>
+    <string name="use_previous_signatures">Использовать установленные подписи</string>
+    <string name="use_previous_signatures_summary">"При установке всегда используйте подписи из уже установленных приложений.
+  Это крайне «опасно».
+  Включайте только тогда, когда это действительно необходимо! "</string>
+    <string name="use_previous_signatures_warning">!! Любой APK может перезаписать установленный !!\nБудьте осторожны при установке неизвестных APK.</string>
+    <string name="bypass_shared_user">Обойти проверку общего пользователя</string>
+    <string name="bypass_shared_user_summary">Разрешить установку приложения с подписью, отличающейся от подписи его общего пользователя (<b>также должен быть включен ‘Отключить сравнение подписей’</b>)</string>
+    <string name="disable_verification_agent">Отключить агент проверки пакетов</string>
+    <string name="disable_verification_agent_summary">например, Google Play Protection</string>
+    <string name="bypass_block">Обойти блокировку</string>
+    <string name="bypass_block_summary">Обойти список блокировок на некоторых устройствах, например Nothing Phone</string>
+    <string name="module_description">Android 9-16 core patch</string>
+</resources>

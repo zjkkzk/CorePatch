@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Core Patch</string>
+    <string name="bypass_downgrade">Izinkan turun versi</string>
+    <string name="bypass_downgrade_summary">Izinkan turun versi aplikasi.</string>
+    <string name="bypass_verification">Matikan verifikasi digest</string>
+    <string name="bypass_verification_summary">Izinkan pemasangan aplikasi setelah file dalam apk dimodifikasi (abaikan kesalahan digest yang tidak valid).</string>
+    <string name="bypass_digest">Matikan pembanding signatures</string>
+    <string name="bypass_digest_summary">Izinkan pemasangan ulang aplikasi dengan signatures berbeda.</string>
+    <string name="bypass_exact_signature_match">Bypass exact signature match</string>
+    <string name="bypass_exact_signature_match_summary">Allow split APKs to use different signatures.</string>
+    <string name="use_previous_signatures">Gunakan signatures terpasang</string>
+    <string name="use_previous_signatures_summary">Selalu gunakan signatures dari aplikasi yang sudah terpasang ketika memasang.\n Ini sangat <b>berbahaya</b>.\n Hanya aktifkan jika diperlukan sangad!</string>
+    <string name="use_previous_signatures_warning">!! Segala apk dapat menggantikan aplikasi yang terpasang !!\nBerhati-hati ketika memasang apk antah-berantah</string>
+    <string name="bypass_shared_user">Terobos verifikasi pengguna bersama</string>
+    <string name="bypass_shared_user_summary">Izinkan pemasangan aplikasi dengan signatures berbeda dari pengguna bersama-nya (<b>\'Matikan pembanding signature\' harus diaktifkan juga</b>)</string>
+    <string name="disable_verification_agent">Matikan Agen Verifikasi Paket</string>
+    <string name="disable_verification_agent_summary">Contoh: Proteksi Google Play</string>
+    <string name="bypass_block">Terobos blokiran</string>
+    <string name="bypass_block_summary">Terobos daftar blokir dalam beberapa perangkat seperti Nothing Phone</string>
+    <string name="module_description">Android 9-16 core patch</string>
+</resources>

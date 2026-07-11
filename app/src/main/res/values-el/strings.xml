@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Core Patch</string>
+    <string name="bypass_downgrade">Επιτρεπόμενη υποβάθμιση</string>
+    <string name="bypass_downgrade_summary">Επιτρέπει την υποβάθμιση εφαρμογών.</string>
+    <string name="bypass_verification">Απενεργοποίηση επαλήθευσης σύνοψης</string>
+    <string name="bypass_verification_summary">Επιτρέπει την εγκατάσταση εφαρμογών μετά την τροποποίηση ενός αρχείου στο APK (αγνοεί το σφάλμα μη έγκυρης σύνοψης).</string>
+    <string name="bypass_digest">Απενεργοποίηση σύγκρισης υπογραφών</string>
+    <string name="bypass_digest_summary">Επιτρέπει την επανεγκατάσταση εφαρμογών με διαφορετικές υπογραφές.</string>
+    <string name="bypass_exact_signature_match">Απενεργοποίηση ακριβούς αντιστοίχισης υπογραφής</string>
+    <string name="bypass_exact_signature_match_summary">Απενεργοποιεί την ακριβή αντιστοίχιση υπογραφής μεταξύ των APKs, επιτρέποντας εγκαταστάσεις όπου κάθε τμήμα APK έχει διαφορετική υπογραφή. Ενεργοποιήστε μόνο όταν χρειάζεται!</string>
+    <string name="use_previous_signatures">Χρήση εγκατεστημένων υπογραφών</string>
+    <string name="use_previous_signatures_summary">Χρησιμοποιεί πάντα τις υπογραφές των ήδη εγκατεστημένων εφαρμογών κατά την εγκατάσταση.\nΑυτό είναι εξαιρετικά <b>επικίνδυνο</b>.\nΕνεργοποιήστε μόνο όταν είναι απολύτως απαραίτητο!</string>
+    <string name="use_previous_signatures_warning">!! Οποιοδήποτε APK μπορεί να αντικαταστήσει την εγκατεστημένη εφαρμογή !!\nΝα είστε προσεκτικοί κατά την εγκατάσταση APKs από άγνωστες πηγές.</string>
+    <string name="bypass_shared_user">Παράκαμψη επαλήθευσης κοινόχρηστου χρήστη</string>
+    <string name="bypass_shared_user_summary">Επιτρέπει την εγκατάσταση εφαρμογών με διαφορετική υπογραφή από τον κοινόχρηστο χρήστη τους (<b>πρέπει επίσης να είναι ενεργοποιημένη η \'Απενεργοποίηση σύγκρισης υπογραφών\'</b>).</string>
+    <string name="disable_verification_agent">Απενεργοποίηση παράγοντα επαλήθευσης πακέτου</string>
+    <string name="disable_verification_agent_summary">π.χ. Google Play Protect</string>
+    <string name="bypass_block">Παράκαμψη μπλοκ</string>
+    <string name="bypass_block_summary">Παράκαμψη λίστας αποκλεισμού εγκατάστασης σε ορισμένες συσκευές, όπως το Nothing Phone.</string>
+    <string name="module_description">Επιδιόρθωση πυρήνα Android 9-16</string>
+</resources>

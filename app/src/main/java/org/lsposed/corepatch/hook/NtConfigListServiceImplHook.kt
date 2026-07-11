@@ -1,5 +1,6 @@
 package org.lsposed.corepatch.hook
 
+import org.lsposed.corepatch.Config
 import org.lsposed.corepatch.XposedHelper.hookBefore
 import org.lsposed.corepatch.XposedHelper.hostClassLoader
 
@@ -16,14 +17,12 @@ object NtConfigListServiceImplHook : BaseHook() {
         val isInstallingAppForbiddenMethod =
             ntConfigListServiceImplClazz.declaredMethods.first { m -> m.name == "isInstallingAppForbidden" }
         hookBefore(isInstallingAppForbiddenMethod) { callback ->
-            // TODO: switch
-            callback.returnAndSkip(false)
+            if (Config.isBypassBlockEnabled()) callback.returnAndSkip(false)
         }
         val isStartingAppForbiddenMethod =
             ntConfigListServiceImplClazz.declaredMethods.first { m -> m.name == "isStartingAppForbidden" }
         hookBefore(isStartingAppForbiddenMethod) { callback ->
-            // TODO: switch
-            callback.returnAndSkip(false)
+            if (Config.isBypassBlockEnabled()) callback.returnAndSkip(false)
         }
     }
 }

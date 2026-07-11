@@ -11,13 +11,15 @@ object Config {
     const val USE_PREVIOUS_SIGNATURES = "use_previous_signatures"
     const val BYPASS_SHARED_USER = "bypass_shared_user"
     const val DISABLE_VERIFICATION_AGENT = "disable_verification_agent"
+    const val BYPASS_BLOCK = "bypass_block"
 
     private val allConfig = arrayOf(
         BYPASS_DOWNGRADE,
         BYPASS_VERIFICATION,
         BYPASS_DIGEST,
         USE_PREVIOUS_SIGNATURES,
-        BYPASS_SHARED_USER
+        BYPASS_SHARED_USER,
+        BYPASS_BLOCK
     )
 
     fun printAllConfig() {
@@ -52,6 +54,10 @@ object Config {
 
     fun isDisableVerificationAgentEnabled(): Boolean {
         return prefs.getBoolean(DISABLE_VERIFICATION_AGENT, false)
+    }
+
+    fun isBypassBlockEnabled(): Boolean {
+        return prefs.getBoolean(BYPASS_BLOCK, false)
     }
 
     fun getConfig(key: String): Boolean {

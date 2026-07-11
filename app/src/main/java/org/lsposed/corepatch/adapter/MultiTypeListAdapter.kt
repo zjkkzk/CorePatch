@@ -2,6 +2,7 @@ package org.lsposed.corepatch.adapter
 
 import android.view.View
 import android.view.ViewGroup
+import android.app.AlertDialog
 import android.widget.BaseAdapter
 import org.lsposed.corepatch.Config
 import org.lsposed.corepatch.data.PreferenceData
@@ -34,6 +35,12 @@ class MultiTypeListAdapter(private val dataSet: ArrayList<*>) : BaseAdapter() {
                 view.switchView.isChecked = Config.getConfig(data.key)
                 view.setOnCheckListener { isChecked ->
                     Config.setConfig(data.key, isChecked)
+                    if (isChecked && data.warning != null) {
+                        AlertDialog.Builder(context)
+                            .setMessage(data.warning)
+                            .setPositiveButton(android.R.string.ok, null)
+                            .show()
+                    }
                 }
                 return view
             }

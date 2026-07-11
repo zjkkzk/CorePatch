@@ -25,25 +25,33 @@ class MainActivity : Activity() {
 
     private fun loadPrefs() {
         val bypassDowngrade = SwitchData(
-            getString(R.string.bypass_downgrade), "", Config.BYPASS_DOWNGRADE
+            getString(R.string.bypass_downgrade), getString(R.string.bypass_downgrade_summary), Config.BYPASS_DOWNGRADE
         )
         val bypassVerification = SwitchData(
-            getString(R.string.bypass_verification), "", Config.BYPASS_VERIFICATION
+            getString(R.string.bypass_verification), getString(R.string.bypass_verification_summary), Config.BYPASS_VERIFICATION
         )
         val bypassDigest = SwitchData(
-            getString(R.string.bypass_digest), "", Config.BYPASS_DIGEST
+            getString(R.string.bypass_digest), getString(R.string.bypass_digest_summary), Config.BYPASS_DIGEST
         )
         val bypassExactSignatureMatch = SwitchData(
-            getString(R.string.bypass_exact_signature_match), "", Config.BYPASS_EXACT_SIGNATURE_MATCH
+            getString(R.string.bypass_exact_signature_match), getString(R.string.bypass_exact_signature_match_summary), Config.BYPASS_EXACT_SIGNATURE_MATCH
         )
         val usePreviousSignatures = SwitchData(
-            getString(R.string.use_previous_signatures), "", Config.USE_PREVIOUS_SIGNATURES
+            getString(R.string.use_previous_signatures), getString(R.string.use_previous_signatures_summary), Config.USE_PREVIOUS_SIGNATURES,
+            if (isMiui()) {
+                getString(R.string.miui_usepresig_warn) + "\n\n" + getString(R.string.use_previous_signatures_warning)
+            } else {
+                getString(R.string.use_previous_signatures_warning)
+            }
         )
         val bypassSharedUser = SwitchData(
-            getString(R.string.bypass_shared_user), "", Config.BYPASS_SHARED_USER
+            getString(R.string.bypass_shared_user), getString(R.string.bypass_shared_user_summary), Config.BYPASS_SHARED_USER
         )
         val disableVerificationAgent = SwitchData(
-            getString(R.string.disable_verification_agent), "", Config.DISABLE_VERIFICATION_AGENT
+            getString(R.string.disable_verification_agent), getString(R.string.disable_verification_agent_summary), Config.DISABLE_VERIFICATION_AGENT
+        )
+        val bypassBlock = SwitchData(
+            getString(R.string.bypass_block), getString(R.string.bypass_block_summary), Config.BYPASS_BLOCK
         )
 
         val dataSet = arrayListOf(
@@ -53,7 +61,8 @@ class MainActivity : Activity() {
             bypassExactSignatureMatch,
             usePreviousSignatures,
             bypassSharedUser,
-            disableVerificationAgent
+            disableVerificationAgent,
+            bypassBlock
         )
 
         val adapter = MultiTypeListAdapter(dataSet)
@@ -62,6 +71,14 @@ class MainActivity : Activity() {
         listView.adapter = adapter
         listView.fitsSystemWindows = true
         setContentView(listView)
+    }
+
+    private fun isMiui(): Boolean = try {
+        val systemProperties = Class.forName("android.os.SystemProperties")
+        val get = systemProperties.getMethod("get", String::class.java)
+        (get.invoke(null, "ro.miui.ui.version.code") as String).isNotEmpty()
+    } catch (_: ReflectiveOperationException) {
+        false
     }
 
     override fun onStop() {
