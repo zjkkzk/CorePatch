@@ -46,13 +46,17 @@ object PackageManagerServiceUtilsHook : BaseHook() {
             // public static void checkDowngrade(com.android.server.pm.parsing.pkg.AndroidPackage before, PackageInfoLite after)
             // https://cs.android.com/android/platform/superproject/+/android-14.0.0_r1:frameworks/base/services/core/java/com/android/server/pm/PackageManagerServiceUtils.java;l=1499
             // public static void checkDowngrade(com.android.server.pm.pkg.AndroidPackage before, PackageInfoLite after)
-            val checkDowngradeMethod =
-                packageManagerServiceUtilsClazz.declaredMethods.first { m -> m.name == "checkDowngrade" }
-            hookBefore(checkDowngradeMethod) { callback ->
-                if (Config.isBypassDowngradeEnabled()) {
-                    callback.returnAndSkip(null)
+            packageManagerServiceUtilsClazz.declaredMethods
+                .filter { it.name == "checkDowngrade" && it.returnType == Void.TYPE }
+                .filter {
+                    it.parameterTypes.size == 2 &&
+                        it.parameterTypes[1].name == "android.content.pm.PackageInfoLite"
                 }
-            }
+                .forEach { checkDowngradeMethod ->
+                    hookBefore(checkDowngradeMethod) { callback ->
+                        if (Config.isBypassDowngradeEnabled()) callback.returnAndSkip(null)
+                    }
+                }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
