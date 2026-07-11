@@ -2,7 +2,11 @@ package org.lsposed.corepatch
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.Gravity
+import android.view.ViewGroup.LayoutParams
+import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.TextView
 import org.lsposed.corepatch.App.Companion.mService
 import org.lsposed.corepatch.App.Companion.reloadListener
 import org.lsposed.corepatch.adapter.MultiTypeListAdapter
@@ -11,16 +15,36 @@ import org.lsposed.corepatch.data.SwitchData
 class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (mService != null) {
-            loadPrefs()
-        } else {
-            reloadListener = {
-                runOnUiThread {
-                    loadPrefs()
-                }
+        reloadListener = {
+            runOnUiThread {
+                showContent()
             }
         }
+        showContent()
+    }
+
+    private fun showContent() {
+        val service = mService
+        if (service == null || "system" !in service.scope) {
+            setContentView(LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER
+                fitsSystemWindows = true
+                addView(TextView(this@MainActivity).apply {
+                    layoutParams = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                    setText(R.string.xposed_service_unavailable)
+                    setTextAppearance(android.R.style.TextAppearance_Medium)
+                    gravity = Gravity.CENTER
+                })
+                addView(TextView(this@MainActivity).apply {
+                    layoutParams = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                    setText(R.string.xposed_service_unavailable_summary)
+                    gravity = Gravity.CENTER
+                })
+            })
+            return
+        }
+        loadPrefs()
     }
 
     private fun loadPrefs() {

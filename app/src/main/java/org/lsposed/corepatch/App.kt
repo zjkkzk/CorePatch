@@ -32,6 +32,7 @@ class App : Application(), OnServiceListener {
         synchronized(this) {
             mService = null
             rwPrefs = null
+            reloadListener()
         }
     }
 }
