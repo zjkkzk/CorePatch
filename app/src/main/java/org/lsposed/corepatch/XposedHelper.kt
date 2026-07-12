@@ -33,7 +33,7 @@ object XposedHelper {
 
     class BeforeHookCallback(private val chain: XposedInterface.Chain) {
         val thisObject: Any? get() = chain.thisObject
-        val args: Array<Any?> get() = chain.args.toTypedArray()
+        val args: Array<Any?> = chain.args.toTypedArray()
         private var skipped = false
         private var skipResult: Any? = null
 
@@ -73,7 +73,7 @@ object XposedHelper {
 
             if (!skipped) {
                 try {
-                    result = chain.proceed()
+                    result = chain.proceed(bcb.args)
                 } catch (t: Throwable) {
                     throwable = t
                 }
