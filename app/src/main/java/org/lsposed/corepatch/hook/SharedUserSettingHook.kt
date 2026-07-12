@@ -20,7 +20,7 @@ object SharedUserSettingHook : BaseHook() {
         val uidFlagsField = sharedUserSettingClazz.getDeclaredField("uidFlags")
         uidFlagsField.isAccessible = true
         // 12 final ArraySet<PackageSetting> packages;
-        // 13 private final WatchedArraySet<PackageSetting> mPackages;
+        // 13 private final WatchedArraySet<PackageSetting> mPackages, get ArraySet mStorage
         val packagesField =
             sharedUserSettingClazz.declaredFields.first { f -> f.name == "packages" || f.name == "mPackages" }
         packagesField.isAccessible = true
@@ -52,15 +52,15 @@ object SharedUserSettingHook : BaseHook() {
             val sharedUserSig = getSigningDetails(thisObject) ?: return@hookBefore
             var newSignatures: Any? = null
 
-            val packagesSettings = packagesField.get(thisObject)
+            val packagesSettings = getPackageStorage(packagesField.get(thisObject) ?: return@hookBefore)
+            val valueAtMethod =
+                packagesSettings.javaClass.declaredMethods.first { m -> m.name == "valueAt" }
             val pkgSize =
                 packagesSettings.javaClass.declaredMethods.first { m -> m.name == "size" }
                     .invoke(packagesSettings) as Int
             if (pkgSize == 0) return@hookBefore
-            for (i in 0..pkgSize) {
-                val pkg =
-                    packagesSettings.javaClass.declaredMethods.first { m -> m.name == "valueAt" }
-                        .invoke(packagesSettings, i) ?: continue
+            for (i in 0 until pkgSize) {
+                val pkg = valueAtMethod.invoke(packagesSettings, i) ?: continue
                 // skip the removed package
                 if (pkg == toRemove) {
                     removed = true
@@ -102,15 +102,15 @@ object SharedUserSettingHook : BaseHook() {
             var added = false
             val sharedUserSig = getSigningDetails(thisObject) ?: return@hookBefore
             var newSignatures: Any? = null
-            val packagesSettings = packagesField.get(thisObject)
+            val packagesSettings = getPackageStorage(packagesField.get(thisObject) ?: return@hookBefore)
+            val valueAtMethod =
+                packagesSettings.javaClass.declaredMethods.first { m -> m.name == "valueAt" }
             val pkgSize =
                 packagesSettings.javaClass.declaredMethods.first { m -> m.name == "size" }
                     .invoke(packagesSettings) as Int
             if (pkgSize == 0) return@hookBefore
-            for (i in 0..pkgSize) {
-                var pkg =
-                    packagesSettings.javaClass.declaredMethods.first { m -> m.name == "valueAt" }
-                        .invoke(packagesSettings, i) ?: continue
+            for (i in 0 until pkgSize) {
+                var pkg = valueAtMethod.invoke(packagesSettings, i) ?: continue
                 // skip the added package
                 if (pkg == toAdd) {
                     added = true
@@ -134,6 +134,12 @@ object SharedUserSettingHook : BaseHook() {
             if (!added || newSignatures == null) return@hookBefore
             setSigningDetails(thisObject, newSignatures)
         }
+    }
+
+    fun getPackageStorage(packagesSettings: Any): Any {
+        val storageField = packagesSettings.javaClass.declaredFields.firstOrNull { it.name == "mStorage" }
+        storageField?.isAccessible = true
+        return storageField?.get(packagesSettings) ?: packagesSettings
     }
 
     fun getSigningDetails(pkgOrSharedUser: Any): Any? {
