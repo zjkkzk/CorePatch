@@ -16,7 +16,11 @@ object SigningDetailsHook : BaseHook() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
 
         val signingDetailsClazz =
-            hostClassLoader.loadClass("android.content.pm.PackageParser\$SigningDetails")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                hostClassLoader.loadClass("android.content.pm.SigningDetails")
+            } else {
+                hostClassLoader.loadClass("android.content.pm.PackageParser\$SigningDetails")
+            }
 
         // https://cs.android.com/android/platform/superproject/+/android-9.0.0_r61:frameworks/base/core/java/android/content/pm/PackageParser.java;l=5851
         // public boolean checkCapability(SigningDetails oldDetails, @CertCapabilities int flags)
@@ -25,7 +29,7 @@ object SigningDetailsHook : BaseHook() {
             "checkCapability", signingDetailsClazz, Int::class.java
         )
         hookBefore(checkCapabilityMethod) { callback ->
-            if (Config.isBypassDigestEnabled() && Config.isBypassVerificationEnabled()) {
+            if (Config.isBypassDigestEnabled()) {
                 if (callback.args[1] != 4 && callback.args[1] != 16) {
                     callback.returnAndSkip(true)
                 }
@@ -40,11 +44,11 @@ object SigningDetailsHook : BaseHook() {
             "checkCapabilityRecover", signingDetailsClazz, Int::class.java
         )
         hookBefore(checkCapabilityRecoverMethod) { callback ->
-            if (Config.isBypassDigestEnabled() && Config.isBypassVerificationEnabled()) {
+            if (Config.isBypassDigestEnabled()) {
                 // Don't handle PERMISSION (grant SIGNATURE permissions to pkgs with this cert)
                 // Or applications will have all privileged permissions
                 // https://cs.android.com/android/platform/superproject/+/master:frameworks/base/core/java/android/content/pm/PackageParser.java;l=5947
-                if (callback.args[1] != 4) {
+                if (callback.args[1] != 4 && callback.args[1] != 16) {
                     callback.returnAndSkip(true)
                 }
             }
