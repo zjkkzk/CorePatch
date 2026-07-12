@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.content.pm.ApplicationInfo
 import android.os.Build
 import org.lsposed.corepatch.Config
+import org.lsposed.corepatch.XposedHelper.getOriginInvoker
 import org.lsposed.corepatch.XposedHelper.hookBefore
 import org.lsposed.corepatch.XposedHelper.hostClassLoader
-import org.lsposed.corepatch.XposedHelper.xposedModule
 
 object SharedUserSettingHook : BaseHook() {
     override val name = "SharedUserSettingHook"
@@ -32,15 +32,31 @@ object SharedUserSettingHook : BaseHook() {
 
         val signingDetailsClazz = signingDetailsField.type
         val checkCapabilityMethod =
-            signingDetailsClazz.declaredMethods.first { m -> m.name == "checkCapability" && m.returnType == Boolean::class.java }
+            signingDetailsClazz.getDeclaredMethod(
+                "checkCapability", signingDetailsClazz, Int::class.java
+            )
+        val checkCapabilityInvoker = getOriginInvoker(checkCapabilityMethod)
         val mergeLineageWithMethod =
-            signingDetailsClazz.declaredMethods.first { m -> m.name == "mergeLineageWith" }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                signingDetailsClazz.getDeclaredMethod(
+                    "mergeLineageWith", signingDetailsClazz, Int::class.java
+                )
+            } else {
+                signingDetailsClazz.getDeclaredMethod("mergeLineageWith", signingDetailsClazz)
+            }
+
+        fun mergeLineageWith(first: Any, second: Any): Any? =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                mergeLineageWithMethod.invoke(first, second, 2 /* MERGE_RESTRICTED_CAPABILITY */)
+            } else {
+                mergeLineageWithMethod.invoke(first, second)
+            }
 
         val removePackageMethod =
             sharedUserSettingClazz.declaredMethods.first { m -> m.name == "removePackage" }
         hookBefore(removePackageMethod) { callback ->
             val thisObject = callback.thisObject ?: return@hookBefore
-            if (!Config.isBypassVerificationEnabled() || !Config.isBypassSharedUserEnabled()) {
+            if (!Config.isBypassDigestEnabled() || !Config.isBypassSharedUserEnabled()) {
                 return@hookBefore
             }
             val uidFlags = uidFlagsField.get(thisObject) as Int
@@ -67,10 +83,10 @@ object SharedUserSettingHook : BaseHook() {
                     continue
                 }
                 val packagesSignatures = getSigningDetails(pkg) ?: continue
-                val b1 = xposedModule.getInvoker(checkCapabilityMethod).invoke(
+                val b1 = checkCapabilityInvoker.invoke(
                     packagesSignatures, sharedUserSig, 0
                 ) as Boolean
-                val b2 = xposedModule.getInvoker(checkCapabilityMethod).invoke(
+                val b2 = checkCapabilityInvoker.invoke(
                     sharedUserSig, packagesSignatures, 0
                 ) as Boolean
                 // if old signing exists, return
@@ -81,7 +97,7 @@ object SharedUserSettingHook : BaseHook() {
                 // https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/services/core/java/com/android/server/pm/ReconcilePackageUtils.java;l=193;drc=c9a8baf585e8eb0f3272443930301a61331b65c1
                 // respect to system
                 newSignatures = if (newSignatures == null) packagesSignatures
-                else mergeLineageWithMethod.invoke(newSignatures, packagesSignatures)
+                else mergeLineageWith(newSignatures, packagesSignatures)
             }
             if (!removed || newSignatures == null) return@hookBefore
             setSigningDetails(thisObject, newSignatures)
@@ -91,7 +107,7 @@ object SharedUserSettingHook : BaseHook() {
             sharedUserSettingClazz.declaredMethods.first { m -> m.name == "addPackage" }
         hookBefore(addPackageMethod) { callback ->
             val thisObject = callback.thisObject ?: return@hookBefore
-            if (!Config.isBypassVerificationEnabled() || !Config.isBypassSharedUserEnabled()) {
+            if (!Config.isBypassDigestEnabled() || !Config.isBypassSharedUserEnabled()) {
                 return@hookBefore
             }
             val uidFlags = uidFlagsField.get(thisObject) as Int
@@ -117,10 +133,10 @@ object SharedUserSettingHook : BaseHook() {
                     pkg = toAdd
                 }
                 val packagesSignatures = getSigningDetails(pkg) ?: continue
-                val b1 = xposedModule.getInvoker(checkCapabilityMethod).invoke(
+                val b1 = checkCapabilityInvoker.invoke(
                     packagesSignatures, sharedUserSig, 0
                 ) as Boolean
-                val b2 = xposedModule.getInvoker(checkCapabilityMethod).invoke(
+                val b2 = checkCapabilityInvoker.invoke(
                     sharedUserSig, packagesSignatures, 0
                 ) as Boolean
                 // if old signing exists, return
@@ -129,7 +145,7 @@ object SharedUserSettingHook : BaseHook() {
                 // https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/services/core/java/com/android/server/pm/ReconcilePackageUtils.java;l=193;drc=c9a8baf585e8eb0f3272443930301a61331b65c1
                 // respect to system
                 newSignatures = if (newSignatures == null) packagesSignatures
-                else mergeLineageWithMethod.invoke(sharedUserSig, packagesSignatures)
+                else mergeLineageWith(newSignatures, packagesSignatures)
             }
             if (!added || newSignatures == null) return@hookBefore
             setSigningDetails(thisObject, newSignatures)
@@ -156,7 +172,11 @@ object SharedUserSettingHook : BaseHook() {
     }
 
     fun setSigningDetails(pkgOrSharedUser: Any, signingDetails: Any?) {
-        val signaturesField = pkgOrSharedUser.javaClass.getDeclaredField("signatures")
+        val signaturesField = try {
+            pkgOrSharedUser.javaClass.getDeclaredField("signatures")
+        } catch (_: NoSuchFieldException) {
+            pkgOrSharedUser.javaClass.superclass?.getDeclaredField("signatures") ?: return
+        }
         signaturesField.isAccessible = true
         val signatures = signaturesField.get(pkgOrSharedUser)
         val mSigningDetailsField = signatures.javaClass.getDeclaredField("mSigningDetails")

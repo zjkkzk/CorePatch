@@ -119,6 +119,9 @@ object XposedHelper {
         return xposedModule.deoptimize(method)
     }
 
+    fun getOriginInvoker(method: Method) =
+        xposedModule.getInvoker(method).setType(XposedInterface.Invoker.Type.ORIGIN)
+
     fun setStaticBoolean(field: Field, value: Boolean) {
         try {
             // Resolve the target field before reading its internal ART offset.
