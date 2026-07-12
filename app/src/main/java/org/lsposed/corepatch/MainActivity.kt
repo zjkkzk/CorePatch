@@ -1,8 +1,12 @@
 package org.lsposed.corepatch
 
 import android.app.Activity
+import android.content.ComponentName
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
 import android.view.ViewGroup.LayoutParams
 import android.widget.LinearLayout
 import android.widget.ListView
@@ -95,6 +99,42 @@ class MainActivity : Activity() {
         listView.adapter = adapter
         listView.fitsSystemWindows = true
         setContentView(listView)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menu.add(Menu.NONE, R.string.hide_launcher_icon, Menu.NONE, R.string.hide_launcher_icon).apply {
+            isCheckable = true
+            setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        }
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        val component = ComponentName(this, "$packageName.LauncherAlias")
+        menu.findItem(R.string.hide_launcher_icon).isChecked =
+            packageManager.getComponentEnabledSetting(component) ==
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.string.hide_launcher_icon) {
+            val component = ComponentName(this, "$packageName.LauncherAlias")
+            val hidden = packageManager.getComponentEnabledSetting(component) ==
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+            packageManager.setComponentEnabledSetting(
+                component,
+                if (hidden) {
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                } else {
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                },
+                PackageManager.DONT_KILL_APP
+            )
+            item.isChecked = !hidden
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun isMiui(): Boolean = try {
