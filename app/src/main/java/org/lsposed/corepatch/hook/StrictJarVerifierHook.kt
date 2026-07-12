@@ -74,6 +74,7 @@ object StrictJarVerifierHook : BaseHook() {
                 val signer = signerInfo[0]
                 val certs = getCertificateChainMethod.invoke(signer, block)
                 callback.result = certs
+                callback.throwable = null
             }
         }
     }

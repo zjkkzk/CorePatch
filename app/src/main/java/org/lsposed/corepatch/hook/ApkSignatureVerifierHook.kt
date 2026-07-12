@@ -168,6 +168,7 @@ object ApkSignatureVerifierHook : BaseHook() {
                         ) == -103
                     ) {
                         callback.result = newResult
+                        callback.throwable = null
                     }
                     val cause = throwable.cause ?: return@hookAfter
                     if (cause.javaClass == packageParserExceptionClazz && errorField.getInt(
@@ -175,6 +176,7 @@ object ApkSignatureVerifierHook : BaseHook() {
                         ) == -103
                     ) {
                         callback.result = newResult
+                        callback.throwable = null
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && errorCode == -103) {
                         val input = callback.args[0]!!
@@ -183,6 +185,7 @@ object ApkSignatureVerifierHook : BaseHook() {
                         callback.result =
                             input.javaClass.declaredMethods.first { m -> m.name == "success" }
                                 .invoke(input, newResult)
+                        callback.throwable = null
                     }
                 }
             }
