@@ -1,10 +1,15 @@
 package org.lsposed.corepatch
 
+import android.annotation.SuppressLint
+import android.graphics.Point
 import android.util.Log
 import io.github.libxposed.api.XposedInterface
 import io.github.libxposed.api.XposedModule
 import java.lang.reflect.Executable
+import java.lang.reflect.Field
 import java.lang.reflect.Method
+import java.lang.reflect.Modifier
+import sun.misc.Unsafe
 
 typealias BeforeCallback = (XposedHelper.BeforeHookCallback) -> Unit
 typealias AfterCallback = (XposedHelper.AfterHookCallback) -> Unit
@@ -15,6 +20,8 @@ object XposedHelper {
     lateinit var hostClassLoader: ClassLoader
         private set
     val prefs by lazy { xposedModule.getRemotePreferences("conf") }
+    private val unsafeInstance by lazy { getUnsafe() }
+    private val fieldOffsetValue by lazy { getFieldOffsetOffset() }
 
     fun setXposedModule(module: XposedModule) {
         xposedModule = module
@@ -110,5 +117,55 @@ object XposedHelper {
 
     fun deoptimize(method: Method): Boolean {
         return xposedModule.deoptimize(method)
+    }
+
+    fun setStaticBoolean(field: Field, value: Boolean) {
+        try {
+            // Resolve the target field before reading its internal ART offset.
+            field.isAccessible = true
+            field.get(null)
+        } catch (_: IllegalAccessException) {
+        }
+
+        val offset = unsafeInstance.getInt(field, fieldOffsetValue).toLong()
+        unsafeInstance.putBoolean(field.declaringClass, offset, value)
+    }
+
+    @SuppressLint("DiscouragedPrivateApi")
+    private fun getUnsafe(): Unsafe {
+        val unsafeField = Unsafe::class.java.getDeclaredField("theUnsafe")
+        unsafeField.isAccessible = true
+        return unsafeField.get(null) as Unsafe
+    }
+
+    @Suppress("DEPRECATION")
+    @SuppressLint("SoonBlockedPrivateApi")
+    private fun getFieldOffsetOffset(): Long {
+        var noSuchFieldException: NoSuchFieldException? = null
+        try {
+            val offsetField = Field::class.java.getDeclaredField("offset")
+            offsetField.isAccessible = true
+            offsetField.getInt(offsetField)
+            return unsafeInstance.objectFieldOffset(offsetField)
+        } catch (e: NoSuchFieldException) {
+            noSuchFieldException = e
+        } catch (_: IllegalAccessException) {
+        } catch (_: UnsupportedOperationException) {
+        }
+
+        val probeField = Point::class.java.getDeclaredField("x")
+        probeField.getInt(Point())
+        val fieldOffset = unsafeInstance.objectFieldOffset(probeField).toInt()
+        for (offset in 8 until 256 step 4) {
+            val offsetLong = offset.toLong()
+            if (unsafeInstance.getInt(probeField, offsetLong) != fieldOffset) continue
+
+            val modifiedOffset = fieldOffset.inv()
+            unsafeInstance.putInt(probeField, offsetLong, modifiedOffset)
+            val currentOffset = unsafeInstance.objectFieldOffset(probeField).toInt()
+            unsafeInstance.putInt(probeField, offsetLong, fieldOffset)
+            if (currentOffset == modifiedOffset) return offsetLong
+        }
+        throw noSuchFieldException ?: NoSuchFieldException("Field.offset")
     }
 }

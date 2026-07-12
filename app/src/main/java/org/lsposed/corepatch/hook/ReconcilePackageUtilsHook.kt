@@ -2,21 +2,14 @@ package org.lsposed.corepatch.hook
 
 import android.annotation.SuppressLint
 import android.os.Build
-import java.lang.reflect.Field
-import java.lang.reflect.Modifier
 import org.lsposed.corepatch.Config
 import org.lsposed.corepatch.XposedHelper
 import org.lsposed.corepatch.XposedHelper.hostClassLoader
 import org.lsposed.corepatch.XposedHelper.log
+import org.lsposed.corepatch.XposedHelper.setStaticBoolean
 
 object ReconcilePackageUtilsHook : BaseHook() {
     override val name = "ReconcilePackageUtilsHook"
-
-    private val fieldAccessFlagsField by lazy {
-        Field::class.java.getDeclaredField("accessFlags").apply {
-            isAccessible = true
-        }
-    }
 
     @SuppressLint("PrivateApi")
     override fun hook() {
@@ -32,10 +25,7 @@ object ReconcilePackageUtilsHook : BaseHook() {
         if (Config.isBypassDigestEnabled() && Config.isBypassSharedUserEnabled()) {
             reconcilePackageUtilsClazz.declaredFields.firstOrNull { field -> field.name == "ALLOW_NON_PRELOADS_SYSTEM_SHAREDUIDS" }
                 ?.let { field ->
-                    field.isAccessible = true
-                    val accessFlags = fieldAccessFlagsField.getInt(field)
-                    fieldAccessFlagsField.setInt(field, accessFlags and Modifier.FINAL.inv())
-                    field.set(null, true)
+                    setStaticBoolean(field, true)
                 }
         }
     }
