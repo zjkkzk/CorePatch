@@ -36,7 +36,14 @@ object KeySetManagerServiceHook : BaseHook() {
                     // private PrepareResult preparePackageLI(InstallArgs args, PackageInstalledInfo res)
                     // https://cs.android.com/android/platform/superproject/+/android-15.0.0_r36:frameworks/base/services/core/java/com/android/server/pm/InstallPackageHelper.java;l=1381
                     // private void preparePackage(InstallRequest request)
-                    .anyMatch { o: StackTraceElement -> (/* API 35 */"preparePackage" == o.methodName  || /* API 29 */"preparePackageLI" == o.methodName || /* API 28 */ "installPackageLI" == o.methodName) }
+                    // https://cs.android.com/android/platform/superproject/+/android15-qpr2-release:frameworks/base/services/core/java/com/android/server/pm/InstallPackageHelper.java;l=1275
+                    // private List<ReconciledPackage> reconcileInstallPackages(List<InstallRequest> requests, Map<String, Settings.VersionInfo> versionInfos)
+                    .anyMatch { o: StackTraceElement ->
+                        /* API 35 */ "preparePackage" == o.methodName ||
+                        /* API 35 */ "reconcileInstallPackages" == o.methodName ||
+                        /* API 29 */ "preparePackageLI" == o.methodName ||
+                        /* API 28 */ "installPackageLI" == o.methodName
+                    }
             ) {
                 shouldBypass.set(true)
                 callback.returnAndSkip(true)
