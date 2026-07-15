@@ -46,11 +46,12 @@ object PackageManagerServiceUtilsHook : BaseHook() {
             // public static void checkDowngrade(com.android.server.pm.parsing.pkg.AndroidPackage before, PackageInfoLite after)
             // https://cs.android.com/android/platform/superproject/+/android-14.0.0_r1:frameworks/base/services/core/java/com/android/server/pm/PackageManagerServiceUtils.java;l=1499
             // public static void checkDowngrade(com.android.server.pm.pkg.AndroidPackage before, PackageInfoLite after)
+            // OneUI inlines the checkDowngrade methods into one, so we need to hook all methods with the same name and parameter types
             packageManagerServiceUtilsClazz.declaredMethods
                 .filter { it.name == "checkDowngrade" && it.returnType == Void.TYPE }
                 .filter {
-                    it.parameterTypes.size == 2 &&
-                        it.parameterTypes[1].name == "android.content.pm.PackageInfoLite"
+                    it.parameterTypes.lastOrNull()?.name ==
+                        "android.content.pm.PackageInfoLite"
                 }
                 .forEach { checkDowngradeMethod ->
                     hookBefore(checkDowngradeMethod) { callback ->
