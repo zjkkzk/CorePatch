@@ -6,6 +6,8 @@
     <string name="bypass_downgrade_summary">Επιτρέπει την υποβάθμιση εφαρμογών.</string>
     <string name="bypass_verification">Απενεργοποίηση επαλήθευσης σύνοψης</string>
     <string name="bypass_verification_summary">Επιτρέπει την εγκατάσταση εφαρμογών μετά την τροποποίηση ενός αρχείου στο APK (αγνοεί το σφάλμα μη έγκυρης σύνοψης).</string>
+    <string name="bypass_resource_arsc_restrictions">Παράκαμψη περιορισμού στοίχισης του resources.arsc</string>
+    <string name="bypass_resource_arsc_restrictions_summary">Επιτρέπει την εγκατάσταση APK των οποίων το resources.arsc είναι συμπιεσμένο ή δεν είναι στοιχισμένο σε όριο 4 byte σε Android 11 και νεότερες εκδόσεις.</string>
     <string name="bypass_digest">Απενεργοποίηση σύγκρισης υπογραφών</string>
     <string name="bypass_digest_summary">Επιτρέπει την επανεγκατάσταση εφαρμογών με διαφορετικές υπογραφές.</string>
     <string name="bypass_exact_signature_match">Απενεργοποίηση ακριβούς αντιστοίχισης υπογραφής</string>
@@ -13,6 +15,8 @@
     <string name="use_previous_signatures">Χρήση εγκατεστημένων υπογραφών</string>
     <string name="use_previous_signatures_summary">Χρησιμοποιεί πάντα τις υπογραφές των ήδη εγκατεστημένων εφαρμογών κατά την εγκατάσταση.\nΑυτό είναι εξαιρετικά <b>επικίνδυνο</b>.\nΕνεργοποιήστε μόνο όταν είναι απολύτως απαραίτητο!</string>
     <string name="use_previous_signatures_warning">!! Οποιοδήποτε APK μπορεί να αντικαταστήσει την εγκατεστημένη εφαρμογή !!\nΝα είστε προσεκτικοί κατά την εγκατάσταση APKs από άγνωστες πηγές.</string>
+    <string name="allow_hidden_apis_for_system_apps">Να επιτρέπονται τα κρυφά API για εφαρμογές συστήματος</string>
+    <string name="allow_hidden_apis_for_system_apps_summary">Επιτρέπει σε εφαρμογές συστήματος με υπογραφή διαφορετική από την υπογραφή της πλατφόρμας να χρησιμοποιούν κρυφά API χωρίς περιορισμούς.</string>
     <string name="miui_usepresig_warn">Οι χρήστες Xiaomi/Redmi δεν πρέπει να ενεργοποιήσουν αυτήν την επιλογή, διαφορετικά η συσκευή ενδέχεται να μην εκκινείται.</string>
     <string name="bypass_shared_user">Παράκαμψη επαλήθευσης κοινόχρηστου χρήστη</string>
     <string name="bypass_shared_user_summary">Επιτρέπει την εγκατάσταση εφαρμογών με διαφορετική υπογραφή από τον κοινόχρηστο χρήστη τους (<b>πρέπει επίσης να είναι ενεργοποιημένη η \'Απενεργοποίηση σύγκρισης υπογραφών\'</b>).</string>

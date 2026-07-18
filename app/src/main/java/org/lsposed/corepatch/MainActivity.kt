@@ -59,6 +59,11 @@ class MainActivity : Activity() {
         val bypassVerification = SwitchData(
             getString(R.string.bypass_verification), getString(R.string.bypass_verification_summary), Config.BYPASS_VERIFICATION
         )
+        val bypassResourceArscRestrictions = SwitchData(
+            getString(R.string.bypass_resource_arsc_restrictions),
+            getString(R.string.bypass_resource_arsc_restrictions_summary),
+            Config.BYPASS_RESOURCE_ARSC_RESTRICTIONS
+        )
         val bypassDigest = SwitchData(
             getString(R.string.bypass_digest), getString(R.string.bypass_digest_summary), Config.BYPASS_DIGEST
         )
@@ -73,6 +78,11 @@ class MainActivity : Activity() {
                 getString(R.string.use_previous_signatures_warning)
             }
         )
+        val allowHiddenApisForSystemApps = SwitchData(
+            getString(R.string.allow_hidden_apis_for_system_apps),
+            getString(R.string.allow_hidden_apis_for_system_apps_summary),
+            Config.ALLOW_HIDDEN_APIS_FOR_SYSTEM_APPS
+        )
         val bypassSharedUser = SwitchData(
             getString(R.string.bypass_shared_user), getString(R.string.bypass_shared_user_summary), Config.BYPASS_SHARED_USER
         )
@@ -86,9 +96,11 @@ class MainActivity : Activity() {
         val dataSet = arrayListOf(
             bypassDowngrade,
             bypassVerification,
+            bypassResourceArscRestrictions,
             bypassDigest,
             bypassExactSignatureMatch,
             usePreviousSignatures,
+            allowHiddenApisForSystemApps,
             bypassSharedUser,
             disableVerificationAgent,
             bypassBlock

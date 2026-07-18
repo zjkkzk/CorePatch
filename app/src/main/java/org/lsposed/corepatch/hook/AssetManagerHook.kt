@@ -23,7 +23,7 @@ object AssetManagerHook : BaseHook() {
         val containsAllocatedTableMethod =
             assetManagerClazz.getDeclaredMethod("containsAllocatedTable")
         hookBefore(containsAllocatedTableMethod) { callback ->
-            if (Config.isBypassVerificationEnabled()) {
+            if (Config.isBypassResourceArscRestrictionsEnabled()) {
                 callback.returnAndSkip(false)
             }
         }

@@ -19,7 +19,7 @@ object ApplicationInfoHook : BaseHook() {
         val isPackageWhitelistedForHiddenApisMethod =
             applicationInfoClazz.getDeclaredMethod("isPackageWhitelistedForHiddenApis")
         hookBefore(isPackageWhitelistedForHiddenApisMethod) { callback ->
-            if (Config.isBypassDigestEnabled()) {
+            if (Config.isAllowHiddenApisForSystemAppsEnabled()) {
                 val applicationInfo = callback.thisObject as ApplicationInfo
                 if (applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0 || applicationInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP != 0) {
                     callback.returnAndSkip(true)

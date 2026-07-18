@@ -6,6 +6,8 @@
     <string name="bypass_downgrade_summary">Permite o downgrade de apps</string>
     <string name="bypass_verification">Desativar verificação de integridade</string>
     <string name="bypass_verification_summary">Permite instalar apps após modificar um arquivo no APK (ignore o erro de integridade inválido)</string>
+    <string name="bypass_resource_arsc_restrictions">Ignorar restrição de alinhamento do resources.arsc</string>
+    <string name="bypass_resource_arsc_restrictions_summary">Permitir a instalação de APKs cujo resources.arsc esteja compactado ou não esteja alinhado em 4 bytes no Android 11 e versões posteriores.</string>
     <string name="bypass_digest">Desativar comparação de assinaturas</string>
     <string name="bypass_digest_summary">Permite a reinstalação do app com assinaturas diferentes</string>
     <string name="bypass_exact_signature_match">Desativar correspondência exata de assinatura</string>
@@ -13,6 +15,8 @@
     <string name="use_previous_signatures">Usar assinaturas instaladas</string>
     <string name="use_previous_signatures_summary">Sempre use assinaturas de apps já instalados durante a instalação.\nIsso é extremamente <b>perigoso</b>.\nAtive apenas quando for realmente necessário!</string>
     <string name="use_previous_signatures_warning">!! Qualquer APK pode substituir o instalado !!\nTenha cuidado ao instalar arquivos APK de fontes desconhecidas.</string>
+    <string name="allow_hidden_apis_for_system_apps">Permitir APIs ocultas para apps do sistema</string>
+    <string name="allow_hidden_apis_for_system_apps_summary">Permitir que apps do sistema com assinatura diferente da assinatura da plataforma usem APIs ocultas livremente.</string>
     <string name="miui_usepresig_warn">Usuários de Xiaomi/Redmi não devem ativar esta opção; caso contrário, o dispositivo poderá não iniciar.</string>
     <string name="bypass_shared_user">Ignorar verificação de usuário compartilhado</string>
     <string name="bypass_shared_user_summary">Permite instalar apps com assinaturas diferentes do usuário compartilhado (<b>\"Desativar comparação de assinaturas\" também deve estar ativado</b>).</string>
