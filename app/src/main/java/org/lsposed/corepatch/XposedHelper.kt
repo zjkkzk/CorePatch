@@ -122,6 +122,14 @@ object XposedHelper {
     fun getOriginInvoker(method: Method) =
         xposedModule.getInvoker(method).setType(XposedInterface.Invoker.Type.ORIGIN)
 
+    fun findClassIfExists(name: String): Class<*>? {
+        return try {
+            hostClassLoader.loadClass(name)
+        } catch (_: ClassNotFoundException) {
+            null
+        }
+    }
+
     fun setStaticBoolean(field: Field, value: Boolean) {
         try {
             // Resolve the target field before reading its internal ART offset.
