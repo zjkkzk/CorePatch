@@ -1,20 +1,19 @@
 package org.lsposed.corepatch.adapter
 
+import android.app.AlertDialog
 import android.view.View
 import android.view.ViewGroup
-import android.app.AlertDialog
 import android.widget.BaseAdapter
 import org.lsposed.corepatch.Config
-import org.lsposed.corepatch.data.PreferenceData
 import org.lsposed.corepatch.data.SwitchData
 import org.lsposed.corepatch.ui.CustomSwitchLayout
 
-class MultiTypeListAdapter(private val dataSet: ArrayList<*>) : BaseAdapter() {
+class MultiTypeListAdapter(private val dataSet: List<SwitchData>) : BaseAdapter() {
     override fun getCount(): Int {
         return dataSet.size
     }
 
-    override fun getItem(position: Int): Any {
+    override fun getItem(position: Int): SwitchData {
         return dataSet[position]
     }
 
@@ -23,38 +22,23 @@ class MultiTypeListAdapter(private val dataSet: ArrayList<*>) : BaseAdapter() {
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        if (convertView != null) return convertView
         val context = parent!!.context
-        when (val data = dataSet[position]) {
-            is SwitchData -> {
-                val view = CustomSwitchLayout(context)
-                view.titleView.text = data.title
-                view.subtitleView.text = data.description
+        val data = dataSet[position]
+        val view = convertView as? CustomSwitchLayout ?: CustomSwitchLayout(context)
+        view.titleView.text = data.title
+        view.subtitleView.text = data.description
 
-                view.setOnCheckListener {}
-                view.switchView.isChecked = Config.getConfig(data.key)
-                view.setOnCheckListener { isChecked ->
-                    Config.setConfig(data.key, isChecked)
-                    if (isChecked && data.warning != null) {
-                        AlertDialog.Builder(context)
-                            .setMessage(data.warning)
-                            .setPositiveButton(android.R.string.ok, null)
-                            .show()
-                    }
-                }
-                return view
-            }
-
-            is PreferenceData -> {
-                val view = CustomSwitchLayout(context)
-                view.titleView.text = data.title
-                if (data.description.isNotEmpty()) view.subtitleView.text = data.description
-                view.setOnClickListener {
-
-                }
-                return view
+        view.setOnCheckListener {}
+        view.switchView.isChecked = Config.getConfig(data.key)
+        view.setOnCheckListener { isChecked ->
+            Config.setConfig(data.key, isChecked)
+            if (isChecked && data.warning != null) {
+                AlertDialog.Builder(context)
+                    .setMessage(data.warning)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show()
             }
         }
-        return View(context)
+        return view
     }
 }

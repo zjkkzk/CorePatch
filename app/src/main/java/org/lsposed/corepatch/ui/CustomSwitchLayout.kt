@@ -1,18 +1,14 @@
 package org.lsposed.corepatch.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.Switch
 import android.widget.TextView
-import org.lsposed.corepatch.Constant
 
-class CustomSwitchLayout(context: Context, attrs: AttributeSet? = null) :
-    CustomViewGroup(context, attrs) {
+class CustomSwitchLayout(context: Context) : CustomViewGroup(context) {
 
     val titleView = TextView(context).apply {
-        if (this.isInEditMode) text = Constant.TOOLS_TEXT
         setTextAppearance(android.R.style.TextAppearance_Medium)
         layoutParams = MarginLayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
             topMargin = 8.dp
@@ -22,7 +18,6 @@ class CustomSwitchLayout(context: Context, attrs: AttributeSet? = null) :
         this@CustomSwitchLayout.addView(this)
     }
     val subtitleView = TextView(context).apply {
-        if (this.isInEditMode) text = Constant.TOOLS_TEXT
         layoutParams = MarginLayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
             leftMargin = 16.dp
             bottomMargin = 8.dp
