@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">核心破解</string>
+    <string name="app_name">核心破解 N</string>
     <string name="xposed_service_unavailable">无法连接 Xposed 服务</string>
     <string name="xposed_service_unavailable_summary">请确认 Xposed 框架正在运行，并且已启用本模块。</string>
     <string name="bypass_downgrade">允许降级安装应用</string>
@@ -20,6 +20,6 @@
     <string name="disable_verification_agent_summary">如 Play 商店的保护机制</string>
     <string name="bypass_block">绕过黑名单</string>
     <string name="bypass_block_summary">绕过某些设备如 Nothing Phone 上的黑名单</string>
-    <string name="module_description">Android 9-16 核心破解</string>
+    <string name="module_description">软件包管理服务修改</string>
     <string name="hide_launcher_icon">隐藏桌面图标</string>
 </resources>

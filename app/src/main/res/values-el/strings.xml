@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">Core Patch</string>
+    <string name="app_name">Διόρθωση Πυρήνα N</string>
+    <string name="xposed_service_unavailable">Αδυναμία σύνδεσης στην υπηρεσία Xposed</string>
+    <string name="xposed_service_unavailable_summary">Βεβαιωθείτε ότι το πλαίσιο Xposed εκτελείται και ότι αυτή η μονάδα είναι ενεργοποιημένη.</string>
     <string name="bypass_downgrade">Επιτρεπόμενη υποβάθμιση</string>
     <string name="bypass_downgrade_summary">Επιτρέπει την υποβάθμιση εφαρμογών.</string>
     <string name="bypass_verification">Απενεργοποίηση επαλήθευσης σύνοψης</string>
@@ -11,11 +13,13 @@
     <string name="use_previous_signatures">Χρήση εγκατεστημένων υπογραφών</string>
     <string name="use_previous_signatures_summary">Χρησιμοποιεί πάντα τις υπογραφές των ήδη εγκατεστημένων εφαρμογών κατά την εγκατάσταση.\nΑυτό είναι εξαιρετικά <b>επικίνδυνο</b>.\nΕνεργοποιήστε μόνο όταν είναι απολύτως απαραίτητο!</string>
     <string name="use_previous_signatures_warning">!! Οποιοδήποτε APK μπορεί να αντικαταστήσει την εγκατεστημένη εφαρμογή !!\nΝα είστε προσεκτικοί κατά την εγκατάσταση APKs από άγνωστες πηγές.</string>
+    <string name="miui_usepresig_warn">Οι χρήστες Xiaomi/Redmi δεν πρέπει να ενεργοποιήσουν αυτήν την επιλογή, διαφορετικά η συσκευή ενδέχεται να μην εκκινείται.</string>
     <string name="bypass_shared_user">Παράκαμψη επαλήθευσης κοινόχρηστου χρήστη</string>
     <string name="bypass_shared_user_summary">Επιτρέπει την εγκατάσταση εφαρμογών με διαφορετική υπογραφή από τον κοινόχρηστο χρήστη τους (<b>πρέπει επίσης να είναι ενεργοποιημένη η \'Απενεργοποίηση σύγκρισης υπογραφών\'</b>).</string>
     <string name="disable_verification_agent">Απενεργοποίηση παράγοντα επαλήθευσης πακέτου</string>
     <string name="disable_verification_agent_summary">π.χ. Google Play Protect</string>
     <string name="bypass_block">Παράκαμψη μπλοκ</string>
     <string name="bypass_block_summary">Παράκαμψη λίστας αποκλεισμού εγκατάστασης σε ορισμένες συσκευές, όπως το Nothing Phone.</string>
-    <string name="module_description">Επιδιόρθωση πυρήνα Android 9-16</string>
+    <string name="module_description">Τροποποίηση υπηρεσίας διαχείρισης πακέτων</string>
+    <string name="hide_launcher_icon">Απόκρυψη εικονιδίου εκκίνησης</string>
 </resources>
