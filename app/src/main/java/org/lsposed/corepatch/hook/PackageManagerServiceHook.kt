@@ -12,7 +12,7 @@ object PackageManagerServiceHook : BaseHook() {
 
     @SuppressLint("PrivateApi", "DiscouragedPrivateApi", "SoonBlockedPrivateApi")
     override fun hook() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1 || Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
             return
         }
 
@@ -27,7 +27,7 @@ object PackageManagerServiceHook : BaseHook() {
             packageManagerServiceClazz.declaredMethods.first { m -> m.name == "checkDowngrade" && m.returnType == Void.TYPE }
         hookBefore(checkDowngradeVoidMethod) { callback ->
             if (Config.isBypassDowngradeEnabled()) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 && Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
                     val before = callback.args[0]!!
                     val packageParserPackageClazz = before.javaClass
                     val mVersionCodeField =

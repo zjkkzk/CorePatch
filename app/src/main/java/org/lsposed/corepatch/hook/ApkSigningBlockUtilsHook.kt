@@ -1,7 +1,6 @@
 package org.lsposed.corepatch.hook
 
 import android.annotation.SuppressLint
-import android.os.Build
 import org.lsposed.corepatch.Config
 import org.lsposed.corepatch.XposedHelper.hookBefore
 import org.lsposed.corepatch.XposedHelper.hostClassLoader
@@ -11,8 +10,6 @@ object ApkSigningBlockUtilsHook : BaseHook() {
 
     @SuppressLint("PrivateApi")
     override fun hook() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
-
         val apkSigningBlockUtilsClazz =
             hostClassLoader.loadClass("android.util.apk.ApkSigningBlockUtils")
         // https://cs.android.com/android/platform/superproject/+/android-9.0.0_r61:frameworks/base/core/java/android/util/apk/ApkSigningBlockUtils.java;l=303

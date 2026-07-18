@@ -1,7 +1,6 @@
 package org.lsposed.corepatch.hook
 
 import android.annotation.SuppressLint
-import android.os.Build
 import org.lsposed.corepatch.Config
 import org.lsposed.corepatch.XposedHelper.hookBefore
 import org.lsposed.corepatch.XposedHelper.hostClassLoader
@@ -12,8 +11,6 @@ object KeySetManagerServiceHook : BaseHook() {
 
     @SuppressLint("PrivateApi")
     override fun hook() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
-
         val keySetManagerServiceClazz =
             hostClassLoader.loadClass("com.android.server.pm.KeySetManagerService")
 

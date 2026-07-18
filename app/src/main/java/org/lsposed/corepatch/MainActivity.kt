@@ -1,5 +1,6 @@
 package org.lsposed.corepatch
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ComponentName
 import android.content.pm.PackageManager
@@ -137,6 +138,7 @@ class MainActivity : Activity() {
         return super.onOptionsItemSelected(item)
     }
 
+    @SuppressLint("PrivateApi")
     private fun isMiui(): Boolean = try {
         val systemProperties = Class.forName("android.os.SystemProperties")
         val get = systemProperties.getMethod("get", String::class.java)

@@ -161,7 +161,7 @@ object SharedUserSettingHook : BaseHook() {
     fun getSigningDetails(pkgOrSharedUser: Any): Any? {
         val signaturesField = try {
             pkgOrSharedUser.javaClass.getDeclaredField("signatures")
-        } catch (ignored: NoSuchFieldException) {
+        } catch (_: NoSuchFieldException) {
             pkgOrSharedUser.javaClass.superclass?.getDeclaredField("signatures")
         }
         signaturesField?.isAccessible = true

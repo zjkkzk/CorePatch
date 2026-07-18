@@ -2,7 +2,6 @@ package org.lsposed.corepatch.hook
 
 import android.annotation.SuppressLint
 import android.content.pm.ApplicationInfo
-import android.os.Build
 import org.lsposed.corepatch.Config
 import org.lsposed.corepatch.XposedHelper.hookBefore
 import org.lsposed.corepatch.XposedHelper.hostClassLoader
@@ -12,8 +11,6 @@ object ApplicationInfoHook : BaseHook() {
 
     @SuppressLint("SoonBlockedPrivateApi")
     override fun hook() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
-
         val applicationInfoClazz = hostClassLoader.loadClass("android.content.pm.ApplicationInfo")
 
         // if app is system app, allow to use hidden api, even if app not using a system signature

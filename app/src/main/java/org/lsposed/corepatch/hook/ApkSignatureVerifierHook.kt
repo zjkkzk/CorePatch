@@ -17,8 +17,6 @@ object ApkSignatureVerifierHook : BaseHook() {
 
     @SuppressLint("PrivateApi", "SoonBlockedPrivateApi", "DiscouragedPrivateApi")
     override fun hook() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
-
         val apkSignatureVerifierClazz =
             hostClassLoader.loadClass("android.util.apk.ApkSignatureVerifier")
 

@@ -7,14 +7,11 @@ import org.lsposed.corepatch.XposedHelper.hookBefore
 import org.lsposed.corepatch.XposedHelper.hostClassLoader
 import java.util.Arrays
 
-
 object SigningDetailsHook : BaseHook() {
     override val name = "SigningDetailsHook"
 
     @SuppressLint("PrivateApi")
     override fun hook() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
-
         val signingDetailsClazz =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 hostClassLoader.loadClass("android.content.pm.SigningDetails")
@@ -39,7 +36,6 @@ object SigningDetailsHook : BaseHook() {
         // https://cs.android.com/android/platform/superproject/+/android-9.0.0_r61:frameworks/base/core/java/android/content/pm/PackageParser.java;l=5962
         // public boolean checkCapabilityRecover(SigningDetails oldDetails, @CertCapabilities int flags)
         // New package has a different signature
-        // 处理覆盖安装但签名不一致
         val checkCapabilityRecoverMethod = signingDetailsClazz.getDeclaredMethod(
             "checkCapabilityRecover", signingDetailsClazz, Int::class.java
         )

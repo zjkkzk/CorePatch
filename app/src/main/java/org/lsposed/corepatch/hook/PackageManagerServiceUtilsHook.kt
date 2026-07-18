@@ -13,7 +13,6 @@ object PackageManagerServiceUtilsHook : BaseHook() {
 
     @SuppressLint("PrivateApi")
     override fun hook() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
         val packageManagerServiceUtilsClazz =
             hostClassLoader.loadClass("com.android.server.pm.PackageManagerServiceUtils")
 
