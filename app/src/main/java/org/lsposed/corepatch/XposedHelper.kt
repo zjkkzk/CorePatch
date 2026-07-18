@@ -8,8 +8,6 @@ import io.github.libxposed.api.XposedModule
 import java.lang.reflect.Executable
 import java.lang.reflect.Field
 import java.lang.reflect.Method
-import java.lang.reflect.Modifier
-import sun.misc.Unsafe
 
 typealias BeforeCallback = (XposedHelper.BeforeHookCallback) -> Unit
 typealias AfterCallback = (XposedHelper.AfterHookCallback) -> Unit
@@ -20,7 +18,6 @@ object XposedHelper {
     lateinit var hostClassLoader: ClassLoader
         private set
     val prefs by lazy { xposedModule.getRemotePreferences("conf") }
-    private val unsafeInstance by lazy { getUnsafe() }
     private val fieldOffsetValue by lazy { getFieldOffsetOffset() }
 
     fun setXposedModule(module: XposedModule) {
@@ -138,15 +135,46 @@ object XposedHelper {
         } catch (_: IllegalAccessException) {
         }
 
-        val offset = unsafeInstance.getInt(field, fieldOffsetValue).toLong()
-        unsafeInstance.putBoolean(field.declaringClass, offset, value)
+        val offset = UnsafeAccess.getInt(field, fieldOffsetValue).toLong()
+        UnsafeAccess.putBoolean(field.declaringClass, offset, value)
     }
 
     @SuppressLint("DiscouragedPrivateApi")
-    private fun getUnsafe(): Unsafe {
-        val unsafeField = Unsafe::class.java.getDeclaredField("theUnsafe")
-        unsafeField.isAccessible = true
-        return unsafeField.get(null) as Unsafe
+    private object UnsafeAccess {
+        private val unsafeClass = Class.forName("sun.misc.Unsafe")
+        private val unsafeInstance = unsafeClass.getDeclaredField("theUnsafe").let { field ->
+            field.isAccessible = true
+            field.get(null)
+        }
+        private val getIntMethod = unsafeClass.getMethod(
+            "getInt", Any::class.java, Long::class.javaPrimitiveType
+        )
+        private val putIntMethod = unsafeClass.getMethod(
+            "putInt", Any::class.java, Long::class.javaPrimitiveType, Int::class.javaPrimitiveType
+        )
+        private val putBooleanMethod = unsafeClass.getMethod(
+            "putBoolean",
+            Any::class.java,
+            Long::class.javaPrimitiveType,
+            Boolean::class.javaPrimitiveType
+        )
+        private val objectFieldOffsetMethod = unsafeClass.getMethod(
+            "objectFieldOffset", Field::class.java
+        )
+
+        fun getInt(target: Any, offset: Long) =
+            getIntMethod.invoke(unsafeInstance, target, offset) as Int
+
+        fun putInt(target: Any, offset: Long, value: Int) {
+            putIntMethod.invoke(unsafeInstance, target, offset, value)
+        }
+
+        fun putBoolean(target: Any, offset: Long, value: Boolean) {
+            putBooleanMethod.invoke(unsafeInstance, target, offset, value)
+        }
+
+        fun objectFieldOffset(field: Field) =
+            objectFieldOffsetMethod.invoke(unsafeInstance, field) as Long
     }
 
     @Suppress("DEPRECATION")
@@ -157,7 +185,7 @@ object XposedHelper {
             val offsetField = Field::class.java.getDeclaredField("offset")
             offsetField.isAccessible = true
             offsetField.getInt(offsetField)
-            return unsafeInstance.objectFieldOffset(offsetField)
+            return UnsafeAccess.objectFieldOffset(offsetField)
         } catch (e: NoSuchFieldException) {
             noSuchFieldException = e
         } catch (_: IllegalAccessException) {
@@ -166,15 +194,15 @@ object XposedHelper {
 
         val probeField = Point::class.java.getDeclaredField("x")
         probeField.getInt(Point())
-        val fieldOffset = unsafeInstance.objectFieldOffset(probeField).toInt()
+        val fieldOffset = UnsafeAccess.objectFieldOffset(probeField).toInt()
         for (offset in 8 until 256 step 4) {
             val offsetLong = offset.toLong()
-            if (unsafeInstance.getInt(probeField, offsetLong) != fieldOffset) continue
+            if (UnsafeAccess.getInt(probeField, offsetLong) != fieldOffset) continue
 
             val modifiedOffset = fieldOffset.inv()
-            unsafeInstance.putInt(probeField, offsetLong, modifiedOffset)
-            val currentOffset = unsafeInstance.objectFieldOffset(probeField).toInt()
-            unsafeInstance.putInt(probeField, offsetLong, fieldOffset)
+            UnsafeAccess.putInt(probeField, offsetLong, modifiedOffset)
+            val currentOffset = UnsafeAccess.objectFieldOffset(probeField).toInt()
+            UnsafeAccess.putInt(probeField, offsetLong, fieldOffset)
             if (currentOffset == modifiedOffset) return offsetLong
         }
         throw noSuchFieldException ?: NoSuchFieldException("Field.offset")
