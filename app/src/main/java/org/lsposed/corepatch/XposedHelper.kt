@@ -102,12 +102,8 @@ object XposedHelper {
 
     fun log(message: String, throwable: Throwable? = null) {
         if (throwable != null) {
-            Log.e("CorePatch", message, throwable)
             xposedModule.log(Log.ERROR, "CorePatch", message, throwable)
-        } else {
-            if (BuildConfig.DEBUG) {
-                Log.d("CorePatch", message)
-            }
+        } else if (BuildConfig.DEBUG) {
             xposedModule.log(Log.DEBUG, "CorePatch", message)
         }
     }
@@ -116,7 +112,7 @@ object XposedHelper {
         return xposedModule.deoptimize(method)
     }
 
-    fun getOriginInvoker(method: Method) =
+    fun getOriginInvoker(method: Method): XposedInterface.Invoker<*, Method?>? =
         xposedModule.getInvoker(method).setType(XposedInterface.Invoker.Type.ORIGIN)
 
     fun findClassIfExists(name: String): Class<*>? {

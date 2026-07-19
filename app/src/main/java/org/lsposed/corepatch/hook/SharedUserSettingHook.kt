@@ -35,7 +35,7 @@ object SharedUserSettingHook : BaseHook() {
             signingDetailsClazz.getDeclaredMethod(
                 "checkCapability", signingDetailsClazz, Int::class.java
             )
-        val checkCapabilityInvoker = getOriginInvoker(checkCapabilityMethod)
+        val checkCapabilityInvoker = getOriginInvoker(checkCapabilityMethod) ?: return
         val mergeLineageWithMethod =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 signingDetailsClazz.getDeclaredMethod(
